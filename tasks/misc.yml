@@ -1,0 +1,25 @@
+---
+- lineinfile: dest=/etc/ssh/sshd_config line="UseDNS no"
+  sudo: yes
+
+# This creates hostnames such as:
+#   ubuntu14.04-x64
+#   osx10.8-x64
+#   centos5.11-x86
+- name: Calculate hostname
+  command: echo {{ansible_distribution | lower | regex_replace('Mac', '')}}{{ansible_distribution_version | regex_replace('^(\d+\.\d+\.).*', '\\1')}}-{{ansible_architecture | regex_replace('86_', '') | regex_replace('i3', 'x')}}
+  register: hostname
+
+- name: Set hostname
+  hostname: name={{hostname.stdout}}
+  sudo: yes
+
+- name: Add hostname to /etc/hosts
+  sudo: yes
+  lineinfile: dest=/etc/hosts line="127.0.0.1 {{hostname.stdout}}"
+
+- name: Copy .bash_profile
+  copy: src=.bash_profile dest=~/.bash_profile
+
+- name: Copy .tmux.conf
+  copy: src=.tmux.conf dest=~/.tmux.conf

@@ -1,0 +1,4 @@
+---
+buildbot_server: buildbot.e.ip.saba.us
+buildbot_port: 9989
+buildbot_password: julialang42

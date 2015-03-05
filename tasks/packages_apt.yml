@@ -1,0 +1,45 @@
+---
+# Clear out the cache in case something went horribly wrong
+- name: Clear out apt cache in case something when horribly wrong
+  sudo: yes
+  shell: rm -fR /var/lib/apt/lists/*
+
+- name: Update apt cache and upgrade all installed software
+  sudo: yes
+  apt: update_cache=yes upgrade=full
+
+- name: Get $(uname -r)
+  command: uname -r
+  register: unamer
+
+- name: Install necessary buildslave packages
+  apt: name={{ item }} state=latest
+  sudo: yes
+  with_items:
+    # Needed for building Julia and co.
+    - software-properties-common
+    - python-software-properties
+    - curl
+    - git
+    - build-essential
+    - g++
+    - gcc
+    - gfortran
+    - m4
+    - cmake
+    - python-pip
+    - python-dev
+    - python
+    - bzr
+    - devscripts
+    - linux-headers-{{unamer.stdout}}
+    - ccache
+
+    # Needed because they're awesome
+    - htop
+    - tmux
+    - nano
+
+- name: Install virtualenv
+  pip: name=virtualenv state=latest
+  sudo: yes

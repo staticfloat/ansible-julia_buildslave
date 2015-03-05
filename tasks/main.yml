@@ -1,0 +1,12 @@
+---
+- include: packages_apt.yml
+  when: ansible_os_family == "Debian"
+
+- include: packages_yum.yml
+  when: ansible_os_family == "RedHat"
+
+- include: packages_brew.yml
+  when: ansible_os_family == "Darwin"
+
+- include: misc.yml
+- include: install_buildbot.yml

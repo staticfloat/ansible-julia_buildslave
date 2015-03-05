@@ -1,0 +1,25 @@
+---
+- name: Make space for buildslave environment
+  file: dest=~/buildbot mode=755 state=directory
+
+- name: Get Hostname
+  shell: hostname
+  register: hostname
+
+- name: Install virtualenv to ~/buildbot/sandbox
+  shell: chdir=~/buildbot virtualenv --no-site-packages sandbox
+
+- name: Install buildbot-slave to ~/buildbot/sandbox
+  pip: name=buildbot-slave virtualenv=~/buildbot/sandbox state=latest
+
+- name: Configure buildslave
+  shell: chdir=~/buildbot sandbox/bin/buildslave create-slave --keepalive=100 --umask 022 slave {{buildbot_server}}:{{buildbot_port}} {{hostname.stdout}} {{buildbot_password}}
+
+- name: Set buildslave admin info
+  copy: dest=~/buildbot/slave/info/admin content="Elliot Saba <staticfloat@gmail.com>"
+
+- name: Set buildslave host info
+  copy: dest=~/buildbot/slave/info/host content="Julia {{hostname.stdout}} buildslave"
+
+- name: Setup buildslave cron autostart
+  cron: reboot=yes name="Start buildslave" job="cd $(echo ~)/buildbot; sandbox/bin/buildslave start slave &"

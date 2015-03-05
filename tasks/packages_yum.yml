@@ -1,0 +1,32 @@
+---
+- name: Update yum cache and upgrade all installed software
+  sudo: yes
+  yum: update_cache=yes name=* state=latest
+
+- name: Install necessary buildslave packages
+  yum: name={{ item }} state=latest
+  sudo: yes
+  with_items:
+    # Needed for building Julia and co.
+    - curl
+    - git
+    - gcc
+    - g++
+    - gfortran
+    - m4
+    - kernel-devel
+    - python
+    - python-devel
+    - python-pip
+    - cmake
+    - ccache
+
+    # Needed because they're awesome
+    - htop
+    - tmux
+    - nano
+    - net-tools
+
+- name: Install virtualenv
+  pip: name=virtualenv state=latest
+  sudo: yes

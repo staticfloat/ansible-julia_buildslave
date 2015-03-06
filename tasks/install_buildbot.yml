@@ -6,6 +6,14 @@
   shell: hostname
   register: hostname
 
+- name: Check if buildslave is already installed
+  stat: path=~/buildbot/sandbox/bin/buildslave
+  register: buildslave
+
+- name: Stop buildbot if it's already running
+  shell: chdir=~/buildbot sandbox/bin/buildslave stop slave
+  when: buildslave.stat.exists == True
+
 - name: Install virtualenv to ~/buildbot/sandbox
   shell: chdir=~/buildbot virtualenv --no-site-packages sandbox
 
@@ -23,3 +31,6 @@
 
 - name: Setup buildslave cron autostart
   cron: reboot=yes name="Start buildslave" job="cd $(echo ~)/buildbot; sandbox/bin/buildslave start slave &"
+
+- name: Start buildslave
+  shell: chdir=~/buildbot sandbox/bin/buildslave start slave

@@ -1,11 +1,9 @@
 ---
 # Clear out the cache in case something went horribly wrong
 - name: Clear out apt cache in case something when horribly wrong
-  sudo: yes
   shell: rm -fR /var/lib/apt/lists/*
 
 - name: Update apt cache and upgrade all installed software
-  sudo: yes
   apt: update_cache=yes upgrade=full
 
 - name: Get $(uname -r)
@@ -14,7 +12,6 @@
 
 - name: Install necessary buildslave packages
   apt: name={{ item }} state=latest
-  sudo: yes
   with_items:
     # Needed for building Julia and co.
     - software-properties-common
@@ -42,4 +39,3 @@
 
 - name: Install virtualenv
   pip: name=virtualenv state=latest
-  sudo: yes

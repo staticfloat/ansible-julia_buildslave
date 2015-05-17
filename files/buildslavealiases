@@ -1,0 +1,14 @@
+# Setup nice aliases for starting/stopping buildslaves
+alias buildslave_start="sudo service buildslave start"
+alias buildslave_stop="sudo service buildslave stop"
+
+function buildslave_pause
+{
+    PAUSE="$1"
+    if [[ -z "$PAUSE" ]]; then
+        PAUSE=3600
+    fi
+    buildslave_stop
+    echo "Starting buildslave again in $PAUSE seconds"
+    (sleep $PAUSE && buildslave_start >/dev/null 2>/dev/null) &
+}

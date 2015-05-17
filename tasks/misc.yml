@@ -18,8 +18,6 @@
   sudo: yes
   lineinfile: dest=/etc/hosts line="127.0.0.1 {{hostname.stdout}}"
 
-- name: Copy .bash_profile
-  copy: src=.bash_profile dest=~/.bash_profile
-
-- name: Copy .tmux.conf
-  copy: src=.tmux.conf dest=~/.tmux.conf
+- name: Copy buildslavealiases
+  copy: src=buildslavealiases dest=~/.profile.d/login.d/buildslavealiases
+  sudo: no

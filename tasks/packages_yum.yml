@@ -11,8 +11,8 @@
     - curl
     - git
     - gcc
-    - g++
-    - gfortran
+    - gcc-c++
+    - gcc-gfortran
     - m4
     - kernel-devel
     - python

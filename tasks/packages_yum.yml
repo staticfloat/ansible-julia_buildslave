@@ -4,7 +4,7 @@
   yum: update_cache=yes name=* state=latest
 
 - name: Install necessary buildslave packages
-  yum: name={{ item }} state=latest
+  yum: name={{ item }} state=present
   sudo: yes
   with_items:
     # Needed for building Julia and co.
@@ -17,7 +17,6 @@
     - kernel-devel
     - python
     - python-devel
-    - python-pip
     - cmake
     - ccache
 
@@ -26,6 +25,14 @@
     - tmux
     - nano
     - net-tools
+
+- name: Install python-distribute on ancient systems
+  yum: name=http://ftp.is.co.za/mirror/fedora.redhat.com/epel/5/{{ansible_architecture}}/python26-distribute-0.6.10-4.el5.noarch.rpm state=present
+  when: ansible_distribution_major_version == "5"
+
+- name: Install python-distribute on newer systems
+  yum: name=python-distribute state=latest
+  when: ansible_distribution_major_version != "5"
 
 - name: Install virtualenv
   pip: name=virtualenv state=latest

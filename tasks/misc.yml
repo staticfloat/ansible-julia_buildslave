@@ -7,7 +7,7 @@
 #   osx10.8-x64
 #   centos5.11-x86
 - name: Calculate hostname
-  command: echo {{ansible_distribution | lower | regex_replace('Mac', '')}}{{ansible_distribution_version | regex_replace('^(\d+\.\d+\.).*', '\\1')}}-{{ansible_architecture | regex_replace('86_', '') | regex_replace('i3', 'x')}}
+  command: echo {{ansible_distribution | lower | regex_replace('Mac', '')}}{{ansible_distribution_version | regex_replace('^(\d+\.\d+).*', '\\1')}}-{{ansible_architecture | regex_replace('86_', '') | regex_replace('i3', 'x')}}
   register: hostname
 
 - name: Set hostname

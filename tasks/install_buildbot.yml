@@ -49,10 +49,6 @@
   copy: dest=~/buildbot/slave/info/host content="Julia {{hostname.stdout}} buildslave"
   sudo: no
 
-- name: Setup buildslave cron autostart
-  cron: reboot=yes name="Start buildslave" job="cd $(echo ~)/buildbot; sandbox/bin/buildslave start slave &"
-  sudo: no
-
 - name: Start buildslave
   shell: chdir=~/buildbot sandbox/bin/buildslave start slave
   sudo: no

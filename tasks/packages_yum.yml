@@ -19,6 +19,7 @@
     - python-devel
     - cmake
     - ccache
+    - rpmdevtools
 
     # Needed because they're awesome
     - htop
@@ -26,12 +27,31 @@
     - nano
     - net-tools
 
-- name: Install python-distribute on ancient systems
-  yum: name=http://ftp.is.co.za/mirror/fedora.redhat.com/epel/5/{{ansible_architecture}}/python26-distribute-0.6.10-4.el5.noarch.rpm state=present
+- name: Install python26 on ancient systems
+  yum: name={{item}} state=latest
+  with_items:
+    - python26-devel
+    - python-ssl
   when: ansible_distribution_major_version == "5"
 
-- name: Install python-distribute on newer systems
-  yum: name=python-distribute state=latest
+- name: Download python26-distribute on ancient systems
+  get_url: url=https://cache.e.ip.saba.us/http://ftp.is.co.za/mirror/fedora.redhat.com/epel/5/{{ansible_architecture}}/python26-distribute-0.6.10-4.el5.noarch.rpm dest=/tmp/
+  when: ansible_distribution_major_version == "5"
+
+- name: Install python26-distribute on ancient systems
+  command: rpm -iv /tmp/python26-distribute-0.6.10-4.el5.noarch.rpm
+  when: ansible_distribution_major_version == "5"
+  ignore_errors: yes
+
+- name: Install pip on ancient systems
+  command: easy_install-2.6 pip
+  when: ansible_distribution_major_version == "5"
+
+- name: Cleanup python26-distribute on ancient systems
+  file: path=/tmp/python26-distribute-0.6.10-4.el5.noarch.rpm state=absent
+
+- name: Install python-pip on newer systems
+  yum: name=python-pip state=latest
   when: ansible_distribution_major_version != "5"
 
 - name: Install virtualenv

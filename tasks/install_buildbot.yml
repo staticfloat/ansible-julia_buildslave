@@ -3,11 +3,6 @@
   file: dest=~/buildbot mode=755 state=directory
   sudo: no
 
-- name: Get Hostname
-  shell: hostname
-  register: hostname
-  sudo: no
-
 - name: Check if buildslave is already installed
   sudo: no
   stat: path=~/buildbot/sandbox/bin/buildslave

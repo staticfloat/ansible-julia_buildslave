@@ -1,0 +1,3 @@
+# Encrypt everything that ends in .cer and .p12
+*.cer filter=git-crypt diff=git-crypt
+*.p12 filter=git-crypt diff=git-crypt

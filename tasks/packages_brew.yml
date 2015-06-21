@@ -1,13 +1,10 @@
 ---
-# Install Homebrew, don't let it ask questions
-- name: Install Homebrew
-  sudo: yes
-  shell: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" </dev/null
-
 - name: Update homebrew and upgrade all installed software
+  sudo: no
   homebrew: update_homebrew=yes upgrade_all=yes
 
 - name: Install necessary buildslave packages
+  sudo: no
   homebrew: name={{item}} state=latest
   with_items:
     - gcc
@@ -16,11 +13,12 @@
     - cmake
     - curl
     - ccache
+    - platypus
 
     # Needed because they're awesome
     - htop
     - tmux
-    - nano
 
 - name: Install virtualenv
+  sudo: no
   pip: name=virtualenv state=latest

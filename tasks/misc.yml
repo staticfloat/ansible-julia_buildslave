@@ -1,22 +1,51 @@
 ---
+- stat: path=/etc/ssh/sshd_config
+  register: sshd_config
+
 - lineinfile: dest=/etc/ssh/sshd_config line="UseDNS no"
+  when: sshd_config.stat.exists == True
   sudo: yes
 
 # This creates hostnames such as:
 #   ubuntu14.04-x64
 #   osx10.8-x64
 #   centos5.11-x86
+#   windows8.1-x64
+- name: Calculate distribution
+  command: echo {{ansible_distribution | lower | regex_replace('mac', '') | regex_replace('na', 'windows')}}
+  register: distribution
+
+- name: Calculate distribution version
+  command: echo {{ansible_distribution_version | regex_replace('^(\d+\.\d+).*', '\\1') | regex_replace('na', '')}}{{ansible_system | lower | regex_replace('darwin', '') | regex_replace('linux', '') | regex_replace('cygwin_nt-(\d+\.\d+)-wow', '\\1')}}
+  register: distribution_version
+
+- name: Calculate proctype
+  command: echo {{ansible_architecture | regex_replace('86_', '') | regex_replace('i3', 'x')}}
+  register: proctype
+
 - name: Calculate hostname
-  command: echo {{ansible_distribution | lower | regex_replace('Mac', '')}}{{ansible_distribution_version | regex_replace('^(\d+\.\d+).*', '\\1')}}-{{ansible_architecture | regex_replace('86_', '') | regex_replace('i3', 'x')}}
+  command: echo {{distribution.stdout}}{{distribution_version.stdout}}-{{proctype.stdout}}
   register: hostname
 
 - name: Set hostname
   hostname: name={{hostname.stdout}}
+  ignore_errors: true
   sudo: yes
+
+- name: Set hostname (osx)
+  command: scutil --set HostName {{hostname.stdout}}
+  when: distribution.stdout == "osx"
+  sudo: yes
+
+# This doesn't seem to work, too bad. :(
+# - name: Set hostname (windows)
+#   shell: wmic computersystem where name="%COMPUTERNAME%" call rename name="{{hostname.stdout}}"
+#   when: distribution.stdout == "windows"
 
 - name: Add hostname to /etc/hosts
   sudo: yes
   lineinfile: dest=/etc/hosts line="127.0.0.1 {{hostname.stdout}}"
+  when: distribution.stdout != "windows"
 
 - name: Copy buildslavealiases
   copy: src=buildslavealiases dest=~/.profile.d/login.d/buildslavealiases

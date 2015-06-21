@@ -1,0 +1,8 @@
+---
+- name: Install pip
+  shell: curl -L https://bootstrap.pypa.io/get-pip.py | python
+  sudo: no
+
+- name: Install virtualenv
+  sudo: no
+  pip: name=virtualenv state=latest

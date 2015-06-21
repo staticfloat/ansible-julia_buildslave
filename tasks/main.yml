@@ -7,6 +7,11 @@
 
 - include: packages_brew.yml
   when: ansible_os_family == "Darwin"
+- include: codesign_osx.yml
+  when: ansible_os_family == "Darwin"
+
+- include: packages_cygwin.yml
+  when: ansible_os_family == "NA"
 
 - include: misc.yml
 - include: install_buildbot.yml

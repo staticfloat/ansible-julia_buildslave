@@ -1,0 +1,37 @@
+---
+- stat: path=~/xcode.keychain
+  sudo: no
+  register: keychain
+
+- name: Create xcode.keychain
+  sudo: no
+  shell: security -v create-keychain -p "{{osx_keychain_password}}" ~/xcode.keychain
+  ignore_errors: yes
+
+- name: Create unlock_keychain.sh
+  template: src=unlock_keychain.sh dest=~/unlock_keychain.sh mode=0700
+  sudo: no
+
+- name: Copy codesigning certificate
+  copy: src=julia-osx-code-sign.cer dest=~/julia-osx-code-sign.cer
+  sudo: no
+
+- name: Copy codesigning key
+  copy: src=julia-osx-code-sign.p12 dest=~/julia-osx-code-sign.p12
+  sudo: no
+
+- name: Import codesigning certificate
+  sudo: no
+  shell: ~/unlock_keychain.sh && security -v import ~/julia-osx-code-sign.cer -k ~/xcode.keychain
+  ignore_errors: yes
+
+- name: Import codesigning key
+  sudo: no
+  shell: ~/unlock_keychain.sh && security -v import ~/julia-osx-code-sign.p12 -k ~/xcode.keychain -P "{{osx_codesign_key_password}}"
+  ignore_errors: yes
+
+- name: Cleanup certificate
+  file: path=~/julia-osx-code-sign.cer state=absent
+
+- name: Cleanup key
+  file: path=~/julia-osx-code-sign.p12 state=absent

@@ -1,3 +1,6 @@
 ---
 buildbot_server: buildbot.e.ip.saba.us
 buildbot_port: 9989
+
+osx_keychain_password: "please override me"
+osx_codesign_key_password: "please override me"

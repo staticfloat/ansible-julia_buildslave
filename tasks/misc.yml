@@ -16,7 +16,7 @@
   register: distribution
 
 - name: Calculate distribution version
-  command: echo {{ansible_distribution_version | regex_replace('^(\d+\.\d+).*', '\\1') | regex_replace('na', '')}}{{ansible_system | lower | regex_replace('darwin', '') | regex_replace('linux', '') | regex_replace('cygwin_nt-(\d+\.\d+)-wow', '\\1')}}
+  command: echo {{ansible_distribution_version | regex_replace('^(\d+\.\d+).*', '\\1') | regex_replace('na', '')}}{{ansible_system | lower | regex_replace('darwin', '') | regex_replace('linux', '') | regex_replace('(cygwin|msys)_nt-(\d+\.\d+)-wow', '\\2')}}
   register: distribution_version
 
 - name: Calculate proctype
@@ -48,5 +48,9 @@
   when: distribution.stdout != "windows"
 
 - name: Copy buildslavealiases
-  copy: src=buildslavealiases dest=~/.profile.d/login.d/buildslavealiases
-  sudo: no
+  copy: src=buildslavealiases dest=/etc/buildslavealiases mode=0755
+  sudo: yes
+
+- name: Install buildslavealiases into /etc/profile
+  lineinfile: dest=/etc/profile line="source /etc/buildslavealiases"
+  sudo: yes

@@ -12,6 +12,10 @@
   template: src=unlock_keychain.sh dest=~/unlock_keychain.sh mode=0700
   sudo: no
 
+- name: Set keychain settings
+  shell: ~/unlock_keychain.sh && security -v set-keychain-settings ~/xcode.keychain
+  sudo: no
+
 - name: Copy codesigning certificate
   copy: src=julia-osx-code-sign.cer dest=~/julia-osx-code-sign.cer
   sudo: no

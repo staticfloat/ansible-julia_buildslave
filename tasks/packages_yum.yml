@@ -50,8 +50,11 @@
 - name: Cleanup python26-distribute on ancient systems
   file: path=/tmp/python26-distribute-0.6.10-4.el5.noarch.rpm state=absent
 
-- name: Install python-pip on newer systems
-  yum: name=python-pip state=latest
+- name: Install packages on newer systems
+  yum: name={{item}} state=latest
+  with_items:
+    - python-pip
+    - copr-cli
   when: ansible_distribution_major_version != "5"
 
 - name: Install virtualenv

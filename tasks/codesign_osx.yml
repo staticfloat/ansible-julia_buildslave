@@ -6,6 +6,7 @@
 - name: Create xcode.keychain
   sudo: no
   shell: security -v create-keychain -p "{{osx_keychain_password}}" ~/xcode.keychain
+  no_log: yes
   ignore_errors: yes
 
 - name: Create unlock_keychain.sh

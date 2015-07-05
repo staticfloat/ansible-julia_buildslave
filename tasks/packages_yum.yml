@@ -17,7 +17,7 @@
     - kernel-devel
     - python
     - python-devel
-    - cmake
+    - cmake28
     - ccache
     - rpmdevtools
 

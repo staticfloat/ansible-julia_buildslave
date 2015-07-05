@@ -17,7 +17,6 @@
     - kernel-devel
     - python
     - python-devel
-    - cmake28
     - ccache
     - rpmdevtools
 
@@ -27,11 +26,12 @@
     - nano
     - net-tools
 
-- name: Install python26 on ancient systems
+- name: Install python26 and cmake28 on ancient systems
   yum: name={{item}} state=latest
   with_items:
     - python26-devel
     - python-ssl
+    - cmake28
   when: ansible_distribution_major_version == "5"
 
 - name: Download python26-distribute on ancient systems
@@ -55,6 +55,7 @@
   with_items:
     - python-pip
     - copr-cli
+    - cmake
   when: ansible_distribution_major_version != "5"
 
 - name: Install virtualenv

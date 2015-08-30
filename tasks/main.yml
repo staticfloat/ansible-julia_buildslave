@@ -12,6 +12,9 @@
 
 - include: packages_cygwin.yml
   when: ansible_os_family == "NA"
+- include: codesign_win.yml
+  when: ansible_os_family == "NA"
+
 
 - include: misc.yml
 - include: install_buildbot.yml

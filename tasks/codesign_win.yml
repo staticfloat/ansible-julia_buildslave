@@ -1,0 +1,8 @@
+---
+- name: Copy codesigning key/certificate
+  copy: src=julia-win-codesign_2015.p12 dest=~/julia-win-codesign.p12
+  sudo: no
+
+- name: Create sign.sh
+  template: src=sign.sh dest=~/sign.sh mode=0700
+  sudo: no

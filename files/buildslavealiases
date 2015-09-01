@@ -3,8 +3,8 @@ if [[ -f /etc/init.d/buildslave ]]; then
 	alias buildslave_start="sudo service buildslave start"
 	alias buildslave_stop="sudo service buildslave stop"
 else
-	alias buildslave_start="~/buildbot/sandbox/bin/buildslave start"
-	alias buildslave_stop="~/buildbot/sandbox/bin/buildslave stop"
+	alias buildslave_start="(cd ~/buildbot/slave; ~/buildbot/sandbox/bin/buildslave start)"
+	alias buildslave_stop="(cd ~/buildbot/slave; ~/buildbot/sandbox/bin/buildslave stop)"
 fi
 
 

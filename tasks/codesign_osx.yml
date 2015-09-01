@@ -21,26 +21,14 @@
   shell: ~/unlock_keychain.sh && security -v default-keychain -s ~/xcode.keychain
   sudo: no
 
-- name: Copy codesigning certificate
-  copy: src=julia-osx-code-sign.cer dest=~/julia-osx-code-sign.cer
+- name: Copy codesigning key/certificate
+  copy: src=julia-osx-codesign.p12 dest=~/julia-osx-codesign.p12
   sudo: no
 
-- name: Copy codesigning key
-  copy: src=julia-osx-code-sign.p12 dest=~/julia-osx-code-sign.p12
+- name: Import codesigning key/certificate
   sudo: no
-
-- name: Import codesigning certificate
-  sudo: no
-  shell: ~/unlock_keychain.sh && security -v import ~/julia-osx-code-sign.cer -k ~/xcode.keychain -T /usr/bin/codesign
+  shell: ~/unlock_keychain.sh && security -v import ~/julia-osx-codesign.p12 -k ~/xcode.keychain -T /usr/bin/codesign -P "{{osx_codesign_key_password}}"
   ignore_errors: yes
 
-- name: Import codesigning key
-  sudo: no
-  shell: ~/unlock_keychain.sh && security -v import ~/julia-osx-code-sign.p12 -k ~/xcode.keychain -T /usr/bin/codesign -P "{{osx_codesign_key_password}}"
-  ignore_errors: yes
-
-- name: Cleanup certificate
-  file: path=~/julia-osx-code-sign.cer state=absent
-
-- name: Cleanup key
-  file: path=~/julia-osx-code-sign.p12 state=absent
+- name: Cleanup key/certificate
+  file: path=~/julia-osx-codesign.p12 state=absent

@@ -10,13 +10,13 @@
 #   ubuntu14.04-x64
 #   osx10.8-x64
 #   centos5.11-x86
-#   windows8.1-x64
+#   win8.1-x64
 - name: Calculate distribution
-  command: echo {{ansible_distribution | lower | regex_replace('mac', '') | regex_replace('na', 'windows')}}
+  command: echo {{ansible_distribution | lower | regex_replace('mac', '') | regex_replace('na', 'win')}}
   register: distribution
 
 - name: Calculate distribution version
-  command: echo {{ansible_distribution_version | regex_replace('^(\d+\.\d+).*', '\\1') | regex_replace('na', '')}}{{ansible_system | lower | regex_replace('darwin', '') | regex_replace('linux', '') | regex_replace('(cygwin|msys)_nt-(\d+\.\d+)-wow', '\\2')}}
+  command: echo {{ansible_distribution_version | lower | regex_replace('^(\d+\.\d+).*', '\\1') | regex_replace('na', '')}}{{ansible_system | lower | regex_replace('darwin', '') | regex_replace('linux', '') | regex_replace('(cygwin|msys)_nt-(\d+\.\d+)(-wow)?', '\\2')}}
   register: distribution_version
 
 - name: Calculate proctype

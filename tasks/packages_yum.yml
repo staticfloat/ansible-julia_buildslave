@@ -2,6 +2,8 @@
 - name: Update yum cache and upgrade all installed software
   sudo: yes
   yum: update_cache=yes name=* state=latest
+  # ansible 1.9.2 sucks!
+  ignore_errors: yes
 
 - name: Install necessary buildslave packages
   yum: name={{ item }} state=present

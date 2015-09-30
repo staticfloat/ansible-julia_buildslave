@@ -21,6 +21,7 @@
     - python-devel
     - ccache
     - rpmdevtools
+    - openssl-devel
 
     # Needed because they're awesome
     - htop

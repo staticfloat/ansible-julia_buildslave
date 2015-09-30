@@ -31,6 +31,7 @@
     - devscripts
     - linux-headers-{{unamer.stdout}}
     - ccache
+    - libssl-dev
 
     # Needed because they're awesome
     - htop

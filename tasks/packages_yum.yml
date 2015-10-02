@@ -22,6 +22,7 @@
     - ccache
     - rpmdevtools
     - openssl-devel
+    - libedit-devel
 
     # Needed because they're awesome
     - htop

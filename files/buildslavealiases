@@ -1,7 +1,7 @@
 # Setup nice aliases for starting/stopping buildslaves
 if [[ -f /etc/init.d/buildslave ]]; then
-	alias buildslave_start="sudo service buildslave start"
-	alias buildslave_stop="sudo service buildslave stop"
+   alias buildslave_start="/etc/init.d/buildslave start"
+   alias buildslave_stop="/etc/init.d/buildslave stop"
 else
     function buildslave_start
     {

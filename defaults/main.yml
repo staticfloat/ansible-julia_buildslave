@@ -1,5 +1,5 @@
 ---
-buildbot_server: buildbot.e.ip.saba.us
+buildbot_server: build.julialang.org
 buildbot_port: 9989
 
 osx_keychain_password: "please override me"

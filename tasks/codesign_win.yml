@@ -3,6 +3,15 @@
   copy: src=julia-win-codesign_2015.p12 dest=~/julia-win-codesign.p12
   sudo: no
 
+- name: Get encryption marker
+  command: head -c 10 ~/julia-win-codesign.p12
+  register: encryption_marker
+  become: false
+
+- name: Error out if encrypted
+  fail: Windows codesigning key/certificate gitcrypted!
+  when: encryption_marker.stdout == GITCRYPT
+
 - name: Create sign.sh
   template: src=sign.sh dest=~/sign.sh mode=0700
   sudo: no

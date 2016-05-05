@@ -1,34 +1,44 @@
 ---
 - stat: path=~/xcode.keychain
-  sudo: no
+  become: false
   register: keychain
 
 - name: Create xcode.keychain
-  sudo: no
+  become: false
   shell: security -v create-keychain -p "{{osx_keychain_password}}" ~/xcode.keychain
   no_log: yes
   ignore_errors: yes
 
 - name: Create unlock_keychain.sh
   template: src=unlock_keychain.sh dest=~/unlock_keychain.sh mode=0700
-  sudo: no
+  become: false
 
 - name: Set keychain settings
   shell: ~/unlock_keychain.sh && security -v set-keychain-settings ~/xcode.keychain
-  sudo: no
+  become: false
 
 - name: Set default keychain
   shell: ~/unlock_keychain.sh && security -v default-keychain -s ~/xcode.keychain
-  sudo: no
+  become: false
 
 - name: Copy codesigning key/certificate
   copy: src=julia-osx-codesign.p12 dest=~/julia-osx-codesign.p12
-  sudo: no
+  become: false
+
+- name: Get encryption marker
+  command: head -c 10 ~/julia-osx-codesign.p12
+  register: encryption_marker
+  become: false
+
+- name: Error out if encrypted
+  fail: OSX codesigning key/certificate gitcrypted!
+  when: encryption_marker.stdout == GITCRYPT
 
 - name: Import codesigning key/certificate
-  sudo: no
+  become: false
   shell: ~/unlock_keychain.sh && security -v import ~/julia-osx-codesign.p12 -k ~/xcode.keychain -T /usr/bin/codesign -P "{{osx_codesign_key_password}}"
   ignore_errors: yes
 
 - name: Cleanup key/certificate
   file: path=~/julia-osx-codesign.p12 state=absent
+  become: false

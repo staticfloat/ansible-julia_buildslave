@@ -9,8 +9,8 @@
   become: false
 
 - name: Error out if encrypted
-  fail: Windows codesigning key/certificate gitcrypted!
-  when: encryption_marker.stdout == GITCRYPT
+  fail: msg="Windows codesigning key/certificate gitcrypted!"
+  when: encryption_marker.stdout == "\u0000GITCRYPT\u0000"
 
 - name: Create sign.sh
   template: src=sign.sh dest=~/sign.sh mode=0700

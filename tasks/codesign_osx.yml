@@ -31,8 +31,8 @@
   become: false
 
 - name: Error out if encrypted
-  fail: OSX codesigning key/certificate gitcrypted!
-  when: encryption_marker.stdout == GITCRYPT
+  fail: msg="OSX codesigning key/certificate gitcrypted!"
+  when: encryption_marker.stdout == "\u0000GITCRYPT\u0000"
 
 - name: Import codesigning key/certificate
   become: false

@@ -1,13 +1,13 @@
 ---
 - name: Update yum cache and upgrade all installed software
-  sudo: yes
+  become: yes
   yum: update_cache=yes name=* state=latest
   # ansible 1.9.2 sucks!
   ignore_errors: yes
 
 - name: Install necessary buildslave packages
   yum: name={{ item }} state=present
-  sudo: yes
+  become: yes
   with_items:
     # Needed for building Julia and co.
     - curl
@@ -39,7 +39,7 @@
   when: ansible_distribution_major_version == "5"
 
 - name: Download python26-distribute on ancient systems
-  get_url: url=https://cache.e.ip.saba.us/http://ftp.is.co.za/mirror/fedora.redhat.com/epel/5/{{ansible_architecture}}/python26-distribute-0.6.10-4.el5.noarch.rpm dest=/tmp/
+  get_url: url=https://cache.julialang.org/http://ftp.is.co.za/mirror/fedora.redhat.com/epel/5/{{ansible_architecture}}/python26-distribute-0.6.10-4.el5.noarch.rpm dest=/tmp/
   when: ansible_distribution_major_version == "5"
 
 - name: Install python26-distribute on ancient systems
@@ -64,4 +64,4 @@
 
 - name: Install virtualenv
   pip: name=virtualenv state=latest
-  sudo: yes
+  become: yes

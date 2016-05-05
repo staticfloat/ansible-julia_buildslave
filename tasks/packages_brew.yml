@@ -1,10 +1,10 @@
 ---
 - name: Update homebrew and upgrade all installed software
-  sudo: no
+  become: no
   homebrew: update_homebrew=yes upgrade_all=yes
 
 - name: Install necessary buildslave packages
-  sudo: no
+  become: no
   homebrew: name={{item}} state=latest
   with_items:
     - gcc
@@ -20,5 +20,5 @@
     - tmux
 
 - name: Install virtualenv
-  sudo: no
+  become: no
   pip: name=virtualenv state=latest

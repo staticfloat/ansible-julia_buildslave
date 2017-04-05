@@ -47,10 +47,3 @@
   lineinfile: dest=/etc/hosts line="127.0.0.1 {{hostname.stdout}}"
   when: distribution.stdout != "windows"
 
-- name: Copy buildslavealiases
-  copy: src=buildslavealiases dest=/etc/buildslavealiases mode=0755
-  sudo: yes
-
-- name: Install buildslavealiases into /etc/profile
-  lineinfile: dest=/etc/profile line="source /etc/buildslavealiases"
-  sudo: yes

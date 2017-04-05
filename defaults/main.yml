@@ -4,3 +4,4 @@ buildbot_port: 9989
 
 osx_keychain_password: "please override me"
 osx_codesign_key_password: "please override me"
+buildbot_password: "please override me"

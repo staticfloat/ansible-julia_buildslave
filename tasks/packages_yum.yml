@@ -8,6 +8,7 @@
 - name: Install necessary buildslave packages
   yum: name={{ item }} state=present
   become: yes
+  ignore_errors: yes
   with_items:
     # Needed for building Julia and co.
     - curl
@@ -19,8 +20,8 @@
     - kernel-devel
     - python
     - python-devel
-    - ccache
     - rpmdevtools
+    - openssl
     - openssl-devel
     - libedit-devel
 
@@ -30,32 +31,16 @@
     - nano
     - net-tools
 
-- name: Install python26 and cmake28 on ancient systems
+- name: Install cmake28 on ancient systems
   yum: name={{item}} state=latest
   with_items:
-    - python26-devel
     - python-ssl
     - cmake28
   when: ansible_distribution_major_version == "5"
 
-- name: Download python26-distribute on ancient systems
-  get_url: url=https://cache.julialang.org/http://ftp.is.co.za/mirror/fedora.redhat.com/epel/5/{{ansible_architecture}}/python26-distribute-0.6.10-4.el5.noarch.rpm dest=/tmp/
-  when: ansible_distribution_major_version == "5"
-
-- name: Install python26-distribute on ancient systems
-  command: rpm -iv /tmp/python26-distribute-0.6.10-4.el5.noarch.rpm
-  when: ansible_distribution_major_version == "5"
-  ignore_errors: yes
-
-- name: Install pip on ancient systems
-  command: easy_install-2.6 pip
-  when: ansible_distribution_major_version == "5"
-
-- name: Cleanup python26-distribute on ancient systems
-  file: path=/tmp/python26-distribute-0.6.10-4.el5.noarch.rpm state=absent
-
 - name: Install packages on newer systems
   yum: name={{item}} state=latest
+  ignore_errors: yes
   with_items:
     - python-pip
     - copr-cli

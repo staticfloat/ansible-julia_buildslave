@@ -30,7 +30,6 @@
     - bzr
     - devscripts
     - linux-headers-{{unamer.stdout}}
-    - ccache
     - libssl-dev
     - libedit-dev
 

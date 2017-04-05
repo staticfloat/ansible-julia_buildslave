@@ -12,7 +12,6 @@
     - python
     - cmake
     - curl
-    - ccache
     - platypus
 
     # Needed because they're awesome

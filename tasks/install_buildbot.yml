@@ -1,16 +1,16 @@
 ---
-- name: Make space for buildslave environment
+- name: Make space for buildbot-worker environment
   file: dest=~/buildbot mode=755 state=directory
   sudo: no
 
-- name: Check if buildslave is already installed
+- name: Check if buildbot-worker is already installed
   sudo: no
-  stat: path=~/buildbot/sandbox/bin/buildslave
-  register: buildslave
+  stat: path=~/buildbot/sandbox/bin/buildbot-worker
+  register: worker
 
 - name: Stop buildbot if it's already running
-  shell: chdir=~/buildbot sandbox/bin/buildslave stop slave
-  when: buildslave.stat.exists == True
+  shell: chdir=~/buildbot sandbox/bin/buildbot-worker stop worker
+  when: worker.stat.exists == True
   ignore_errors: yes
   sudo: no
 
@@ -18,18 +18,18 @@
   shell: chdir=~/buildbot virtualenv --no-site-packages sandbox
   sudo: no
 
-- name: Install buildbot-slave to ~/buildbot/sandbox
-  pip: name=buildbot-slave virtualenv=~/buildbot/sandbox state=latest
+- name: Install buildbot-worker to ~/buildbot/sandbox
+  pip: name=buildbot-worker==0.9rc4 virtualenv=~/buildbot/sandbox state=latest
   sudo: no
 
-- name: Configure buildslave
-  shell: chdir=~/buildbot sandbox/bin/buildslave create-slave --keepalive=100 --umask 022 slave {{buildbot_server}}:{{buildbot_port}} {{hostname.stdout}} {{buildbot_password}}
+- name: Configure buildbot-worker
+  shell: chdir=~/buildbot sandbox/bin/buildbot-worker create-worker --keepalive=100 --umask 022 worker {{buildbot_server}}:{{buildbot_port}} {{hostname.stdout}} {{buildbot_password}}
   sudo: no
 
-- name: Set buildslave admin info
-  copy: dest=~/buildbot/slave/info/admin content="Elliot Saba <staticfloat@gmail.com>"
+- name: Set buildbot-worker admin info
+  copy: dest=~/buildbot/worker/info/admin content="Elliot Saba <staticfloat@gmail.com>"
   sudo: no
 
-- name: Set buildslave host info
-  copy: dest=~/buildbot/slave/info/host content="Julia {{hostname.stdout}} buildslave"
+- name: Set buildbot-worker host info
+  copy: dest=~/buildbot/worker/info/host content="Julia {{hostname.stdout}} buildbot-worker"
   sudo: no
